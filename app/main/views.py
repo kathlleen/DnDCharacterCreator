@@ -7,9 +7,7 @@ def index(request):
 
     #
 
-    url = "https://www.dnd5eapi.co/api/proficiencies/battleaxes"
-
-
+    url = "https://www.dnd5eapi.co/api/races/high-elf"
 
     #
     headers = {

@@ -15,7 +15,7 @@ class Skill(models.Model):
     def __str__(self):
         return self.name
 
-class Ability(models.Model):
+class AbilityScore(models.Model):
     name = models.CharField(max_length=50, unique=True)
     index = models.CharField(max_length=10, unique=True)
     full_name = models.CharField(max_length=100)
@@ -25,12 +25,45 @@ class Ability(models.Model):
     def __str__(self):
         return self.full_name
 
-class Race(models.Model):
+# class AbilityScore(models.Model):
+#     index = models.CharField(max_length=50, unique=True)
+#     name = models.CharField(max_length=100)
+#
+#     def __str__(self):
+#         return self.name
+
+class Trait(models.Model):
     index = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+
+class Race(models.Model):
+    index = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=100)
+    speed = models.IntegerField(null=True, blank=True)
+    alignment = models.TextField(null=True, blank=True)
+    age = models.TextField(null=True, blank=True)
+    size = models.CharField(max_length=50, null=True, blank=True)
+    size_description = models.TextField(null=True, blank=True)
+    language_desc = models.TextField(null=True, blank=True)
+
+    # Связи многие ко многим
+    ability_bonuses = models.ManyToManyField(AbilityScore, through="RaceAbilityBonus")
+    languages = models.ManyToManyField(Language, related_name="races")
+    traits = models.ManyToManyField(Trait, related_name="races")
+
+    def __str__(self):
+        return self.name
+
+class RaceAbilityBonus(models.Model):
+    race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    ability_score = models.ForeignKey(AbilityScore, on_delete=models.CASCADE)
+    bonus = models.IntegerField()
+
+    class Meta:
+        unique_together = ("race", "ability_score")
 
 class Class(models.Model):
     index = models.CharField(max_length=50, unique=True)
