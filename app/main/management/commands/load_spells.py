@@ -1,6 +1,6 @@
 import requests
 from django.core.management.base import BaseCommand
-from main.models import Spell, MagicSchool, Class, Subclass
+from main.models import Spell, MagicSchool, Class
 
 API_URL = "https://www.dnd5eapi.co/api/spells/"
 
@@ -48,10 +48,6 @@ class Command(BaseCommand):
                 class_obj, _ = Class.objects.get_or_create(index=class_data["index"], defaults={"name": class_data["name"]})
                 spell.classes.add(class_obj)
 
-            # Привязываем подклассы
-            for subclass_data in spell_info.get("subclasses", []):
-                subclass_obj, _ = Subclass.objects.get_or_create(index=subclass_data["index"], defaults={"name": subclass_data["name"]})
-                spell.subclasses.add(subclass_obj)
 
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Добавлено заклинание: {spell.name}"))
