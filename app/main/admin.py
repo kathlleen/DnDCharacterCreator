@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from main.models import Language, Skill, Race, CharacterClass, Equipment, Proficiency, RaceAbilityBonus, \
-    AbilityScore, Trait, StartingEquipment, EquipmentChoice
+    AbilityScore, Trait, StartingEquipment, EquipmentChoice, Background
 # Register your models here.
 admin.site.register(Language)
 admin.site.register(Skill)
@@ -14,6 +14,7 @@ admin.site.register(Trait)
 admin.site.register(StartingEquipment)
 # admin.site.register(StartingEquipment)
 admin.site.register(EquipmentChoice)
+admin.site.register(Background)
 # admin.site.register(RaceAbilityBonus)
 
 class RaceAbilityBonusInline(admin.TabularInline):  # Можно заменить на StackedInline для другого вида

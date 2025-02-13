@@ -124,6 +124,22 @@ class EquipmentChoice(models.Model):
     def __str__(self):
         return f"Choice for {self.character_class.name}: {self.description}"
 
+from django.db import models
+
+class Background(models.Model):
+    index = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+
+    skill_proficiencies = models.ManyToManyField("Skill", related_name="backgrounds_with_skills", blank=True)
+    tool_proficiencies = models.TextField(blank=True, null=True)
+    language_options = models.IntegerField(default=0, help_text="Количество языков, которые можно выбрать")
+    starting_equipment = models.TextField(blank=True, null=True)
+    feature_name = models.CharField(max_length=100, blank=True, null=True)
+    feature_description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 #
