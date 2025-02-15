@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractUser, Permission, Group
 from django.db import models
 
 from django.db import models
@@ -138,9 +139,53 @@ class Background(models.Model):
     feature_name = models.CharField(max_length=100, blank=True, null=True)
     feature_description = models.TextField(blank=True, null=True)
 
+    gold = models.IntegerField(default=0)
+
     def __str__(self):
         return self.name
 
+
+class User(AbstractUser):
+    """Кастомная модель пользователя, расширяющая стандартную Django User"""
+    email = models.EmailField(unique=True)
+
+    groups = models.ManyToManyField(Group, related_name="custom_user_groups", blank=True)
+    user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions", blank=True)
+
+    def __str__(self):
+        return self.username
+
+class Character(models.Model):
+    """Модель персонажа"""
+    # image = models.ImageField(upload_to='users_images', blank=True, null=True, verbose_name='Avatar')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="characters")
+    name = models.CharField(max_length=100)
+    level = models.IntegerField(default=1)
+    character_class = models.ForeignKey(CharacterClass, on_delete=models.SET_NULL, null=True, blank=True)
+    race = models.ForeignKey(Race, on_delete=models.SET_NULL, null=True, blank=True)
+    background = models.ForeignKey(Background, on_delete=models.SET_NULL, null=True, blank=True)
+
+    strength = models.IntegerField(default=10)
+    dexterity = models.IntegerField(default=10)
+    constitution = models.IntegerField(default=10)
+    intelligence = models.IntegerField(default=10)
+    wisdom = models.IntegerField(default=10)
+    charisma = models.IntegerField(default=10)
+
+    hit_points = models.IntegerField(default=10)
+    armor_class = models.IntegerField(default=10)
+    speed = models.IntegerField(default=30)
+
+    gold = models.IntegerField(default=0)
+
+    skills = models.ManyToManyField(Skill, blank=True)
+    equipment = models.TextField(blank=True)
+    traits = models.ManyToManyField(Trait, blank=True)
+    languages = models.ManyToManyField(Language, blank=True)
+    proficiencies = models.ManyToManyField(Proficiency, blank=True)
+
+    def __str__(self):
+        return f"{self.name} (Lvl {self.level})"
 
 #
 # class MagicSchool(models.Model):
